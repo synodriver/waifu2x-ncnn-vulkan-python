@@ -1,20 +1,20 @@
 cmake_policy(SET CMP0091 NEW)
 set(CMAKE_POLICY_DEFAULT_CMP0091 NEW)
-set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+#set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
 
-project(waifu2x-ncnn-vulkan-python)
+# project(waifu2x-ncnn-vulkan-python)
 
 cmake_minimum_required(VERSION 3.9)
 
 set(CMAKE_BUILD_TYPE Release)
-set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>DLL")
+#set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>DLL")
 
 
 option(USE_SYSTEM_NCNN "build with system libncnn" OFF)
 option(USE_SYSTEM_WEBP "build with system libwebp" OFF)
 option(USE_STATIC_MOLTENVK "link moltenvk static library" OFF)
 
-find_package(Threads)
+#find_package(Threads)
 find_package(OpenMP)
 find_package(Vulkan REQUIRED)
 
@@ -211,7 +211,8 @@ if(NOT USE_SYSTEM_WEBP)
     include_directories(${CMAKE_CURRENT_SOURCE_DIR}/libwebp/src)
 endif()
 
-add_library(waifu2x SHARED waifu2x_main.cpp waifu2x.cpp waifu2x_py.cpp )
+add_library(waifu2x MODULE waifu2x_main.cpp waifu2x.cpp waifu2x_py.cpp )
+python_extension_module(waifu2x)
 set(WAIFU2X_LINK_LIBRARIES ncnn webp ${Vulkan_LIBRARY} ${PYTHON_LIBRARY})
 
 if(USE_STATIC_MOLTENVK)
@@ -238,3 +239,4 @@ endif()
 
 
 target_link_libraries(waifu2x ${WAIFU2X_LINK_LIBRARIES})
+install(TARGETS waifu2x LIBRARY DESTINATION waifu2x)
