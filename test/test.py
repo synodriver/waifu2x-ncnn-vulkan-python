@@ -6,9 +6,8 @@ if __name__ == "__main__":
     waifu2x.init()
     print(waifu2x.getGpuInfo())
     waifu2x.initSet(0, 1)
-    f = open("0.jpg", "rb")
-    data = f.read()
-    f.close()
+    with open("0.jpg", "rb") as f:
+        data = f.read()
     backId = 1
     count = 0
     if waifu2x.add(data, waifu2x.MODEL_CUNET_NOISE3, backId, scale=2.5) > 0:
@@ -16,7 +15,7 @@ if __name__ == "__main__":
     backId = 2
     if waifu2x.add(data, waifu2x.MODEL_CUNET_NOISE3, backId, format="png", width=900, high=800) > 0:
         count += 1
-    
+
     saveName = {
         1 : "1.jpg",
         2 : "2.png"
